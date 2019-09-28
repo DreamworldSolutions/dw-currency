@@ -40,6 +40,8 @@ import '@dreamworld/dw-currency';
 DwCurrency.setConfig({
     $currency: $currencyConfig
 });
+
+DwCurrency.setDefaultCurrency('CurrencyISOCode');
 ```
 
 #### Example:
@@ -60,6 +62,9 @@ DwCurrency.setConfig({
        "symbolStyle": {color: 'green', fontSize: '18px'}
     },
 });
+
+// Sets default currency in whole application
+DwCurrency.setDefaultCurrency('INR');
 
 //
 DwCurrency.formatCurrency({

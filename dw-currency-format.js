@@ -54,6 +54,10 @@ export class DwCurrencyFormat extends LitElement {
       active: { type: Boolean }
     }
   }
+  constructor() {
+    super();
+    this.value = "";
+  }
   render() {
     let { format } = DwCurrency.getConfig(this.currency);
     if (format && format === "%v %s") {

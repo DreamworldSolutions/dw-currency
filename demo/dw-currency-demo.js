@@ -25,6 +25,7 @@ DwCurrency.setConfig(mapValues(currencyHash, (value) => {
   })
 }));
 
+DwCurrency.setDefaultCurrency('USD');
 export class DwCurrencyDemo extends LitElement {
   static get styles() {
     return [
@@ -38,7 +39,8 @@ export class DwCurrencyDemo extends LitElement {
 
   render() {
     return html`<div>
-      <dw-currency-format value="112869866" currency="EUR"></dw-currency-format>
+      <dw-currency-format value="112869866"></dw-currency-format>
+      <dw-currency-format></dw-currency-format>
       <dw-currency-format value="-110032" currency="USD"></dw-currency-format>
       <dw-currency-format value="112869866" currency="INR"></dw-currency-format>
       <dw-currency-format value="11040" currency="GBP"></dw-currency-format>

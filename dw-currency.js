@@ -13,23 +13,43 @@ export class DwCurrency {
    */
   static formatCurrency(config) {
     let { value, currency, noDecimals, hideNegativeSign, } = config;
+    if (!currency) {
+      currency = this.getDefaultCurrency();
+    }
     return this.applyConfig(value, currency, noDecimals, hideNegativeSign);
   }
 
   /**
    * Sets config
-   * @param {Object} config
+   * @param {Object} config- Used for apply config for whole app
    */
   static setConfig(config) {
     this._config = merge(currencyHash, config);
+  }
+
+  /**
+   * Used to set default currency in whole application
+   * Applicable when currency not passed into `formatCurrency` config
+   * sets `_currency`
+   * @param {Sting} currency- ISO Code of currency
+   */
+  static setDefaultCurrency(currency) {
+    this._currency = currency;
   }
   /**
    * Get currency config
    */
   static getConfig(currency) {
+    currency = currency ? currency : this.getDefaultCurrency();
     return this._config ? this._config[currency] : currencyHash[currency];
   }
 
+  /**
+   * Get default currency
+   */
+  static getDefaultCurrency() {
+    return this._currency || 'INR';
+  }
   /**
    * Invoked for getting currency symbol
    * @param {String} currency -ISO code of currency
