@@ -15,7 +15,12 @@
   "bugs": {
     "url": "https://github.com/DreamworldSolutions/dw-currency/issues"
   },
+  "dependencies": {
+    "lit-element": "^2.2.1",
+    "lodash-es": "^4.17.15"
+  },
   "devDependencies": {
+    "@dreamworld/flex-layout": "^1.0.0",
     "semantic-release": "beta"
   },
   "publishConfig": {
