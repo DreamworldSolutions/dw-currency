@@ -1,0 +1,25 @@
+{
+  "name": "@dreamworld/dw-currency",
+  "version": "0.0.0-development",
+  "description": "Dw currency provides utility function and element for currency view and input",
+  "main": "dw-currency.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DreamworldSolutions/dw-currency.git"
+  },
+  "author": "navnitkapadiya.dream@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DreamworldSolutions/dw-currency/issues"
+  },
+  "devDependencies": {
+    "semantic-release": "beta"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/DreamworldSolutions/dw-currency#readme"
+}
