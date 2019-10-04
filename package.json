@@ -15,16 +15,19 @@
   "bugs": {
     "url": "https://github.com/DreamworldSolutions/dw-currency/issues"
   },
+  "homepage": "https://github.com/DreamworldSolutions/dw-currency#readme",
   "dependencies": {
     "lit-element": "^2.2.1",
     "lodash-es": "^4.17.15"
   },
   "devDependencies": {
     "@dreamworld/flex-layout": "^1.0.0",
-    "semantic-release": "beta"
+    "semantic-release": "16.0.0-beta.23"
   },
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/DreamworldSolutions/dw-currency#readme"
+  "resolutions": {
+    "@semantic-release/npm": "5.2.0-beta.5"
+  }
 }
