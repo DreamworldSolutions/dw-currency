@@ -1,30 +1,28 @@
-import { currencyHash } from './currency';
+import currencyConfig from './currency-config';
 import { merge } from 'lodash-es';
+
+const defaultCurrencyConfig = {
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  thousandSpacing: '2s',
+  valueDivider: 1
+};
+
 export class DwCurrency {
 
   /**
-   * Format a currency value to the String
-   * @param {Object} config - Format config
-   *   @param {String} value - Value that format
-   *   @param {String} currency- ISO code of the Currency
-   *   @param {Boolean} noDecimals- True to hide decimal points
-   *   @param {Boolean} hideNegativeSign -True to show minus sign
-   * @return {String} -returned with formated string
-   */
-  static formatCurrency(config) {
-    let { value, currency, noDecimals, hideNegativeSign, } = config;
-    if (!currency) {
-      currency = this.getDefaultCurrency();
-    }
-    return this.applyConfig(value, currency, noDecimals, hideNegativeSign);
-  }
-
-  /**
-   * Sets config
+   * Sets config, for all the currencies.
+   * 
+   * Actually, this method is used to either add a New currency to the config (not specified in currency-config.js) OR
+   *  to change configuration of a specific currency.
+   * 
+   * Partial configuration (e.g. want to override 1 config value for a currency, but other values should be default) 
+   * for a currency can't be modified, so User has to specify all the configurations for a currency. So, the
+   * configuration property not specified by the currency will become blank/undefined.
    * @param {Object} config- Used for apply config for whole app
    */
   static setConfig(config) {
-    this._config = merge(currencyHash, config);
+    this._config = merge(currencyConfig, config);
   }
 
   /**
@@ -34,21 +32,20 @@ export class DwCurrency {
    * @param {Sting} currency- ISO Code of currency
    */
   static setDefaultCurrency(currency) {
-    this._currency = currency;
+    this._defaultCurrency = currency;
   }
   /**
-   * Get currency config
+   * Returns configuration of the requested currency.
    */
-  static getConfig(currency) {
-    currency = currency ? currency : this.getDefaultCurrency();
-    return this._config ? this._config[currency] : currencyHash[currency];
+  static getCurrencyConfig(currency) {
+    return merge({}, defaultCurrencyConfig, this._config[currency]);
   }
 
   /**
-   * Get default currency
+   * Get default currency. If not specified, it returns `INR`.
    */
   static getDefaultCurrency() {
-    return this._currency || 'INR';
+    return this._defaultCurrency;
   }
   /**
    * Invoked for getting currency symbol
@@ -56,35 +53,48 @@ export class DwCurrency {
    * @return {String} -Returns with string
    */
   static getSymbol(currency) {
-    let config = this.getConfig(currency);
+    let config = this.getCurrencyConfig(currency);
     return config && config.symbol ? config.symbol : '';
   }
 
   /**
-   * Invoked for apply given config
-   * @param {String} value - Currency amount
+   * Formats the given currency value as String. Note:: It doesn't include the currency symbol.
+   *  You may need to manually add it.
+   * @param {String|Object} value - Currency amount. If the first argument is the Object, then 
+   *    other input params are ignored and considered that input is specified as the Object.
    * @param {String} currency - Iso code of currency
    * @param {Boolean} noDecimals - True to hide all decimal points
    * @param {Boolean} hideNegativeSign - true to hide sign of negative amount
    * @return {String} returns string with applied config
    */
-  static applyConfig(value, currency, noDecimals, hideNegativeSign) {
+  static format(value, currency, noDecimals, hideNegativeSign) {
+
+    if (typeof value === 'object') {
+      let args = value;
+      value = args.value;
+      currency = args.currency;
+      noDecimals = args.noDecimals;
+      hideNegativeSign = args.hideNegativeSign;
+    }
+
+    currency = currency || this.getDefaultCurrency();
     //Getting config from currency object
-    let { thousandSeparator, decimalSeparator, thousandSpacing, decimalPoints, valueDivider } = this.getConfig(currency);
+    let { thousandSeparator, decimalSeparator, thousandSpacing, decimalPoints,
+      valueDivider } = this.getCurrencyConfig(currency);
 
     // Value is divided with config value otherwise its divided with 1
     value = (value / (valueDivider || 1)).toString();
 
     // Splitting string in two parts beforeDecimal and afterDecimal
-    let { beforeDecimal, afterDecimal, addNegativeSign } = this.splitDecimal(value, hideNegativeSign);
+    let { beforeDecimal, afterDecimal, addNegativeSign } = this._splitDecimal(value, hideNegativeSign);
 
     // Decimal points
     if (decimalPoints !== null && afterDecimal) {
-      afterDecimal = this.limitToScale(afterDecimal, 2);
+      afterDecimal = this._limitToScale(afterDecimal, 2);
     }
     //Thousand separator saparate string and appended with thousandSeparator
     if (thousandSeparator) {
-      beforeDecimal = this.formatThousand(beforeDecimal, thousandSeparator, thousandSpacing);
+      beforeDecimal = this._formatThousand(beforeDecimal, thousandSeparator, thousandSpacing);
     }
     // Checks value has float value
     const hasDecimalSeparator = value.indexOf('.') !== -1;
@@ -103,7 +113,7 @@ export class DwCurrency {
    * limit decimal numbers to given scale
    * Not used .fixedTo because that will break with big numbers
    */
-  static limitToScale(numStr, scale) {
+  static _limitToScale(numStr, scale) {
     let str = ''
     for (let i = 0; i <= scale - 1; i++) {
       str += numStr[i] || '';
@@ -118,7 +128,7 @@ export class DwCurrency {
    * @param {String} thousandSpacing
    * @return {String} Returns with thousand saparate string
    */
-  static formatThousand(beforeDecimal, thousandSeparator, thousandSpacing) {
+  static _formatThousand(beforeDecimal, thousandSeparator, thousandSpacing) {
     let digitalGroup;
     switch (thousandSpacing) {
       case '2':
@@ -146,7 +156,7 @@ export class DwCurrency {
    *  @param {Boolean} addNegativeSign- true if amount is negative
    *
    */
-  static splitDecimal(numberStr, hideNegativeSign) {
+  static _splitDecimal(numberStr, hideNegativeSign) {
     //Checks string has minus sign
     const hasNegative = numberStr[0] === '-';
     const addNegativeSign = hasNegative && !hideNegativeSign;
@@ -161,4 +171,7 @@ export class DwCurrency {
       addNegativeSign
     }
   }
-}
+};
+
+DwCurrency.setDefaultCurrency('INR');
+DwCurrency._config = currencyConfig;

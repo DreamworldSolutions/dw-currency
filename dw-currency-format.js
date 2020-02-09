@@ -59,9 +59,9 @@ export class DwCurrencyFormat extends LitElement {
     this.value = "";
   }
   render() {
-    let { format } = DwCurrency.getConfig(this.currency);
+    let { format } = DwCurrency.getCurrencyConfig(this.currency);
     if (format && format === "%v %s") {
-      return html`<div class="dw-currency">${DwCurrency.formatCurrency({
+      return html`<div class="dw-currency">${DwCurrency.format({
         value: this.value,
         currency: this.currency,
         noDecimals: this.noDecimals,
@@ -69,7 +69,7 @@ export class DwCurrencyFormat extends LitElement {
         hideNegativeSign: this.hideNegativeSign
       })} ${!this.noSymbol ? html`&nbsp;${this._getCurrencyIcon()}` : null} </div>`;
     }
-    return html`<div class="dw-currency">${!this.noSymbol ? html`${this._getCurrencyIcon()}&nbsp;` : null}${DwCurrency.formatCurrency({
+    return html`<div class="dw-currency">${!this.noSymbol ? html`${this._getCurrencyIcon()}&nbsp;` : null}${DwCurrency.format({
       value: this.value,
       currency: this.currency,
       noDecimals: this.noDecimals,
@@ -82,7 +82,7 @@ export class DwCurrencyFormat extends LitElement {
    * Template of icon with config
    */
   _getCurrencyIcon() {
-    let { symbolText, symbolStyle } = DwCurrency.getConfig(this.currency);
+    let { symbolText, symbolStyle } = DwCurrency.getCurrencyConfig(this.currency);
     return html`<div style=${styleMap(symbolStyle)}>${symbolText ? symbolText : DwCurrency.getSymbol(this.currency)}</div> `;
   }
 }

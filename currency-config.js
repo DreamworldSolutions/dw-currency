@@ -1,5 +1,4 @@
-import { merge, mapValues } from 'lodash-es';
-const oCurrency = {
+export default {
   "AED": {
     "displayName": "AED - UAE dirham",
     "symbol": "د.إ;"
@@ -625,13 +624,3 @@ const oCurrency = {
     "symbol": "Z$"
   }
 };
-
-// Default config added
-export const currencyHash = mapValues(oCurrency, (value) => {
-  return merge(value, {
-    thousandSeparator: ',',
-    decimalSeparator: '.',
-    thousandSpacing: '2s',
-    valueDivider: 1
-  })
-});
