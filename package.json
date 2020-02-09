@@ -1,7 +1,7 @@
 {
   "name": "@dreamworld/dw-currency",
   "version": "0.0.0-development",
-  "description": "Dw currency provides utility function and element for currency view and input",
+  "description": "Dw currency provides utility function to format currency value as String, and an LitElement to represent formatted currency.",
   "main": "dw-currency.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,11 +15,19 @@
   "bugs": {
     "url": "https://github.com/DreamworldSolutions/dw-currency/issues"
   },
+  "homepage": "https://github.com/DreamworldSolutions/dw-currency#readme",
+  "dependencies": {
+    "lit-element": "^2.2.1",
+    "lodash-es": "^4.17.15"
+  },
   "devDependencies": {
-    "semantic-release": "beta"
+    "@dreamworld/flex-layout": "^1.0.0",
+    "semantic-release": "16.0.0-beta.23"
   },
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/DreamworldSolutions/dw-currency#readme"
+  "resolutions": {
+    "@semantic-release/npm": "5.2.0-beta.5"
+  }
 }
