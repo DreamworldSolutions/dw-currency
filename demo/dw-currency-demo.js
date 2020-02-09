@@ -10,22 +10,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { css, LitElement, html } from 'lit-element';
 import { DwCurrency } from '../dw-currency';
-import { merge, mapValues } from 'lodash-es';
 import "../dw-currency-format";
-import { currencyHash } from '../currency';
-/**
- * Setting config for app
- */
-DwCurrency.setConfig(mapValues(currencyHash, (value) => {
-  return merge(value, {
-    thousandSeparator: ',',
-    decimalSeparator: '.',
-    thousandSpacing: '2s',
-    valueDivider: 100,
-  })
-}));
 
-DwCurrency.setDefaultCurrency('USD');
+window.DwCurrency = DwCurrency;
+
+DwCurrency.setConfig({
+  MYC: {
+    symbol: "MC"
+  }
+})
+
+DwCurrency.setDefaults({
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  thousandSpacing: '3',
+  decimalPoints: 2,
+  valueDivider: 100
+});
+
 export class DwCurrencyDemo extends LitElement {
   static get styles() {
     return [
@@ -39,49 +41,49 @@ export class DwCurrencyDemo extends LitElement {
 
   render() {
     return html`<div>
-      <dw-currency-format value="112869866"></dw-currency-format>
-      <dw-currency-format></dw-currency-format>
-      <dw-currency-format value="-110032" currency="USD"></dw-currency-format>
-      <dw-currency-format value="112869866" currency="INR"></dw-currency-format>
-      <dw-currency-format value="11040" currency="GBP"></dw-currency-format>
-      <dw-currency-format value="-110032" currency="EGP"></dw-currency-format>
 
-      <dw-currency-format value="11040" currency="HUF"></dw-currency-format>
-      <dw-currency-format value="110032" currency="KGS"></dw-currency-format>
-      <dw-currency-format value="112869866.8888" currency="LAK"></dw-currency-format>
-      <dw-currency-format value="-11040" currency="MNT"></dw-currency-format>
-      <dw-currency-format value="110032" currency="NPR"></dw-currency-format>
-      <dw-currency-format value="-112869866" currency="SAR"></dw-currency-format>
-      <dw-currency-format value="11040" currency="TJS"></dw-currency-format>
+      <h1>Default</h1>
+      <div>Currency symbol is shown as prefix, and Decimal points are shown as per the global config for the currency.</div>
+      <br>
+      <br>
+      <dw-currency-format value="-110032" currency="USD"></dw-currency-format><br>
+      <dw-currency-format value="112869866" currency="INR"></dw-currency-format><br>
+      <dw-currency-format value="11040" currency="GBP"></dw-currency-format><br>
+      <dw-currency-format value="-110032" currency="EGP"></dw-currency-format><br>
+      <dw-currency-format value="11040" currency="HUF"></dw-currency-format><br>
+      <dw-currency-format value="110032" currency="KGS"></dw-currency-format><br>
+      <dw-currency-format value="112869866.8888" currency="LAK"></dw-currency-format><br>
+      <dw-currency-format value="-11040" currency="MNT"></dw-currency-format><br>
+      <dw-currency-format value="110032" currency="NPR"></dw-currency-format><br>
+      <dw-currency-format value="-112869866" currency="SAR"></dw-currency-format><br>
+      <dw-currency-format value="11040" currency="TJS"></dw-currency-format><br>
+
+      <h1>Symbol as Postfix</h1>
+      <dw-currency-format value="-110032" currency="USD" symbolPosition="postfix"></dw-currency-format><br>
+      <dw-currency-format value="-110032" currency="INR" symbolPosition="postfix"></dw-currency-format><br>
 
 
       <h1> Without currency symbol</h1>
-      <dw-currency-format value="112869866" currency="EUR" noSymbol></dw-currency-format>
-      <dw-currency-format value="-110032" currency="USD" noSymbol></dw-currency-format>
-      <dw-currency-format value="112869866" currency="INR" noSymbol></dw-currency-format>
-      <dw-currency-format value="11040" currency="GBP" noSymbol></dw-currency-format>
-      <dw-currency-format value="-110032" currency="EGP" noSymbol></dw-currency-format>
+      <dw-currency-format value="-110032" currency="USD" symbolPosition="none"></dw-currency-format> (for USD)<br>
+      <dw-currency-format value="-110032" currency="INR" symbolPosition="none"></dw-currency-format> (for INR)<br>
 
 
-      <h1> Without decimal points </h1>
-      <dw-currency-format value="11040" currency="HUF" noDecimals></dw-currency-format>
-      <dw-currency-format value="110032" currency="KGS" noDecimals></dw-currency-format>
-      <dw-currency-format value="112869866.8888" currency="LAK" noDecimals></dw-currency-format>
-      <dw-currency-format value="-11040" currency="MNT" noDecimals></dw-currency-format>
-      <dw-currency-format value="110032" currency="NPR" noDecimals></dw-currency-format>
-      <dw-currency-format value="-112869866" currency="SAR" noDecimals></dw-currency-format>
-      <dw-currency-format value="11040" currency="TJS" noDecimals></dw-currency-format>
+      <h1>Decimal Points customization</h1>
+      <dw-currency-format value="235257.678" currency="USD" decimalPoints="0"></dw-currency-format> (No Decimal Points)<br>
+      <dw-currency-format value="235257.678" currency="USD" decimalPoints="1"></dw-currency-format> (Single Decimal Point)<br>
+      <dw-currency-format value="235257.678" currency="USD" decimalPoints="4"></dw-currency-format> (4 Decimal Points)<br>
+      <br>
+      <dw-currency-format value="235257.678" currency="INR" decimalPoints="0"></dw-currency-format>  (No Decimal Points)<br>
+      <dw-currency-format value="235257.678" currency="INR" decimalPoints="1"></dw-currency-format> (Single Decimal Point)<br>
+      <dw-currency-format value="235257.678" currency="INR" decimalPoints="4"></dw-currency-format> (4 Decimal Points)<br>
 
 
-      <h1>With hide negative sign</h1>
-        <h4>With negative amount</h4>
-      <dw-currency-format value="-112869866" currency="EUR" hideNegativeSign></dw-currency-format>
-      <dw-currency-format value="-110032" currency="USD" hideNegativeSign></dw-currency-format>
-      <dw-currency-format value="-112869866" currency="INR" hideNegativeSign></dw-currency-format>
-      <dw-currency-format value="-11040" currency="GBP" hideNegativeSign></dw-currency-format>
-      <dw-currency-format value="-110032" currency="EGP" hideNegativeSign></dw-currency-format>
-      <dw-currency-format value="-11040" currency="HUF" hideNegativeSign></dw-currency-format>
-      <dw-currency-format value="-110032" currency="KGS" hideNegativeSign></dw-currency-format>
+      <h1>No Negative Sign</h1>
+      <dw-currency-format value="-110032" currency="USD" noNegative></dw-currency-format> (for USD)<br>
+      <dw-currency-format value="-110032" currency="INR" noNegative="none"></dw-currency-format> (for INR)<br>
+
+      <h1>Custom Currency</h1>
+      <dw-currency-format value="110032" currency="MYC"></dw-currency-format><br>
     </div>`
   }
 }

@@ -1,4 +1,4 @@
-export default {
+export const config = {
   "AED": {
     "displayName": "AED - UAE dirham",
     "symbol": "د.إ;"
@@ -249,7 +249,8 @@ export default {
   },
   "INR": {
     "displayName": "INR - Indian rupee",
-    "symbol": "₹"
+    "symbol": "₹",
+    "thousandSpacing": "2s"
   },
   "IQD": {
     "displayName": "IQD - Iraqi dinar",
@@ -623,4 +624,12 @@ export default {
     "displayName": "ZWR - Zimbabwean dollar",
     "symbol": "Z$"
   }
+};
+
+export const defaults = {
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  thousandSpacing: '3',
+  decimalPoints: 2,
+  valueDivider: 1
 };

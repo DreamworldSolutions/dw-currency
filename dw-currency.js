@@ -1,12 +1,5 @@
-import currencyConfig from './currency-config';
+import {config as currencyConfig, defaults as defaultCurrencyConfig} from './currency-config';
 import { merge } from 'lodash-es';
-
-const defaultCurrencyConfig = {
-  thousandSeparator: ',',
-  decimalSeparator: '.',
-  thousandSpacing: '2s',
-  valueDivider: 1
-};
 
 export class DwCurrency {
 
@@ -25,37 +18,17 @@ export class DwCurrency {
     this._config = merge(currencyConfig, config);
   }
 
-  /**
-   * Used to set default currency in whole application
-   * Applicable when currency not passed into `formatCurrency` config
-   * sets `_currency`
-   * @param {Sting} currency- ISO Code of currency
-   */
-  static setDefaultCurrency(currency) {
-    this._defaultCurrency = currency;
+  static setDefaults(defaultConfig) {
+    this._defaultConfig = defaultConfig;
   }
+
   /**
    * Returns configuration of the requested currency.
    */
   static getCurrencyConfig(currency) {
-    return merge({}, defaultCurrencyConfig, this._config[currency]);
+    return merge({}, this._defaultConfig, this._config[currency]);
   }
 
-  /**
-   * Get default currency. If not specified, it returns `INR`.
-   */
-  static getDefaultCurrency() {
-    return this._defaultCurrency;
-  }
-  /**
-   * Invoked for getting currency symbol
-   * @param {String} currency -ISO code of currency
-   * @return {String} -Returns with string
-   */
-  static getSymbol(currency) {
-    let config = this.getCurrencyConfig(currency);
-    return config && config.symbol ? config.symbol : '';
-  }
 
   /**
    * Formats the given currency value as String. Note:: It doesn't include the currency symbol.
@@ -63,60 +36,63 @@ export class DwCurrency {
    * @param {String|Object} value - Currency amount. If the first argument is the Object, then 
    *    other input params are ignored and considered that input is specified as the Object.
    * @param {String} currency - Iso code of currency
-   * @param {Boolean} noDecimals - True to hide all decimal points
-   * @param {Boolean} hideNegativeSign - true to hide sign of negative amount
+   * @param {Number} decimalPoints - Number of decimal points expected in the formatted string.
+   * @param {Boolean} noNegative - true to hide sign of negative amount
    * @return {String} returns string with applied config
    */
-  static format(value, currency, noDecimals, hideNegativeSign) {
+  static format(value, currency, decimalPoints, noNegative) {
 
     if (typeof value === 'object') {
       let args = value;
       value = args.value;
       currency = args.currency;
-      noDecimals = args.noDecimals;
-      hideNegativeSign = args.hideNegativeSign;
+      decimalPoints = args.decimalPoints;
+      noNegative = args.noNegative;
     }
 
-    currency = currency || this.getDefaultCurrency();
+    let curConfig = this.getCurrencyConfig(currency);
     //Getting config from currency object
-    let { thousandSeparator, decimalSeparator, thousandSpacing, decimalPoints,
-      valueDivider } = this.getCurrencyConfig(currency);
+    let { thousandSeparator, decimalSeparator, thousandSpacing,
+      valueDivider } = curConfig;
+
+    if (decimalPoints === undefined) {
+      decimalPoints = curConfig.decimalPoints;
+    }
+
 
     // Value is divided with config value otherwise its divided with 1
     value = (value / (valueDivider || 1)).toString();
 
     // Splitting string in two parts beforeDecimal and afterDecimal
-    let { beforeDecimal, afterDecimal, addNegativeSign } = this._splitDecimal(value, hideNegativeSign);
+    let { beforeDecimal, afterDecimal, addNegativeSign } = this._splitDecimal(value, noNegative);
 
     // Decimal points
-    if (decimalPoints !== null && afterDecimal) {
-      afterDecimal = this._limitToScale(afterDecimal, 2);
-    }
+    afterDecimal = decimalPoints ? this._limitToScale(afterDecimal, decimalPoints) : '';
+
     //Thousand separator saparate string and appended with thousandSeparator
     if (thousandSeparator) {
       beforeDecimal = this._formatThousand(beforeDecimal, thousandSeparator, thousandSpacing);
     }
-    // Checks value has float value
-    const hasDecimalSeparator = value.indexOf('.') !== -1;
-
     //restore negative sign
     if (addNegativeSign) {
       beforeDecimal = '-' + beforeDecimal;
     }
-
     // Saparate amount with decimal separator config
     // If noDecimals config is true then decimal points is not appended
-    return `${beforeDecimal}${hasDecimalSeparator && decimalSeparator || ''}${noDecimals ? '' : afterDecimal}`;
+    return `${beforeDecimal}${!afterDecimal ? '' : decimalSeparator + afterDecimal}`;
   }
 
   /**
-   * limit decimal numbers to given scale
-   * Not used .fixedTo because that will break with big numbers
+   * limit decimal numbers to given scale. It also manages rounding and '0' padding.
+   * We didn't use .fixedTo because that will break with big numbers
    */
   static _limitToScale(numStr, scale) {
-    let str = ''
-    for (let i = 0; i <= scale - 1; i++) {
-      str += numStr[i] || '';
+    let n = numStr ? Math.round(Number(numStr.substr(0, scale) + '.' + numStr.substr(scale))) : 0;
+    let str = n.toString();
+
+    // Do 0 paddings
+    while (str.length < scale) {
+      str += '0';
     }
     return str;
   }
@@ -149,17 +125,17 @@ export class DwCurrency {
   /**
    * Split number string into decimal
    * @param {String} numberStr- Number in string format
-   * @param {Boolean} hideNegativeSign - true to show sign of negative amount
+   * @param {Boolean} noNegative - true to show sign of negative amount
    * @return {Object} - Return with different props
    *  @param {String} beforeDecimal - beforeDecimal e.g if amount is 1000.15 then it stores 1000
    *  @param {String} afterDecimal - afterDecimal e.g if amount is 1000.15 then it stores 15
    *  @param {Boolean} addNegativeSign- true if amount is negative
    *
    */
-  static _splitDecimal(numberStr, hideNegativeSign) {
+  static _splitDecimal(numberStr, noNegative) {
     //Checks string has minus sign
     const hasNegative = numberStr[0] === '-';
-    const addNegativeSign = hasNegative && !hideNegativeSign;
+    const addNegativeSign = hasNegative && !noNegative;
     numberStr = numberStr.replace('-', '');
     const parts = numberStr.split('.');
     const beforeDecimal = parts[0];
@@ -173,5 +149,5 @@ export class DwCurrency {
   }
 };
 
-DwCurrency.setDefaultCurrency('INR');
 DwCurrency._config = currencyConfig;
+DwCurrency._defaultConfig = defaultCurrencyConfig;

@@ -1,15 +1,13 @@
 import { css, LitElement, html } from 'lit-element';
 import { DwCurrency } from './dw-currency';
 import { styleMap } from 'lit-html/directives/style-map';
+
 export class DwCurrencyFormat extends LitElement {
   static get styles() {
     return [
       css`
         :host {
-          display: block;
-        }
-        .dw-currency {
-          display: inline-flex;
+          display: inline;
         }
       `
     ];
@@ -31,59 +29,59 @@ export class DwCurrencyFormat extends LitElement {
 
       /**
        * Input Property
-       * `true` to hide decimal points
+       * Number of decimal points needed.
        */
-      noDecimals: { type: Boolean },
+      decimalPoints: { type: Number },
+
+      /**
+       * Input property.
+       * Position of the symbol. Possible values: `none`, `prefix` and `postfix`. Default: `prefix`.
+       */
+      symbolPosition: String,
 
       /**
        * Input property
-       * `true` to hide currency symbol
+       * Set to `true` to not show negative sign when value is negative.
        */
-      noSymbol: { type: Boolean },
+      noNegative: { type: Boolean }
 
-      /**
-       * Input property
-       * True to hide minus sign
-       */
-      hideNegativeSign: { type: Boolean },
-
-      /**
-       * Input property
-       * `true` if dw-currency-format is active
-       */
-      active: { type: Boolean }
     }
   }
+
   constructor() {
     super();
-    this.value = "";
+    this.symbolPosition = 'prefix';
   }
+
   render() {
-    let { format } = DwCurrency.getCurrencyConfig(this.currency);
-    if (format && format === "%v %s") {
-      return html`<div class="dw-currency">${DwCurrency.format({
-        value: this.value,
-        currency: this.currency,
-        noDecimals: this.noDecimals,
-        noSymbol: this.noSymbol,
-        hideNegativeSign: this.hideNegativeSign
-      })} ${!this.noSymbol ? html`&nbsp;${this._getCurrencyIcon()}` : null} </div>`;
+    if (!this.value) {
+      return;
     }
-    return html`<div class="dw-currency">${!this.noSymbol ? html`${this._getCurrencyIcon()}&nbsp;` : null}${DwCurrency.format({
+
+    if (this.symbolPosition === 'none') {
+      return this._getValue();
+    } else if (this.symbolPosition === 'prefix') {
+      return html`${this._getSymbol()}&nbsp;${this._getValue()}`
+    } else {
+      return html`${this._getValue()}&nbsp;${this._getSymbol()}`;
+    }
+  }
+
+  _getValue() {
+    return html`<span class="value">${DwCurrency.format({
       value: this.value,
       currency: this.currency,
-      noDecimals: this.noDecimals,
-      noSymbol: this.noSymbol,
-      hideNegativeSign: this.hideNegativeSign
-    })}</div>`
+      decimalPoints: this.decimalPoints,
+      noNegative: this.noNegative
+    })}</span>`;
   }
 
   /**
    * Template of icon with config
    */
-  _getCurrencyIcon() {
-    let { symbolText, symbolStyle } = DwCurrency.getCurrencyConfig(this.currency);
-    return html`<div style=${styleMap(symbolStyle)}>${symbolText ? symbolText : DwCurrency.getSymbol(this.currency)}</div> `;
+  _getSymbol() {
+    let { symbol, symbolStyle } = DwCurrency.getCurrencyConfig(this.currency);
+    return html`<span style=${styleMap(symbolStyle)}>${symbol}</span>`;
   }
 }
 

@@ -1,101 +1,107 @@
 # Dw currency
 
 
-- Dw currency provides utility functions for format currency
-  - e.g `setConfig` `formatCurrency` `getSymbol`
-- Common utility function used by `dw-currency-format` and `dw-currency-input`
-- using `setConfig` custom config will be applied
-
-
+## dw-currency-format
 
 ### Install
-Through yarn
-`yarn add @dreamworld/dw-currency`
 
-Through npm
-`npm install react-currency-format`
-
-### import
-
-```js
-import '@dreamworld/dw-currency';
+```bash
+yarn add @dreamworld/dw-currency
 ```
 
-### Currency Config
-| Props        | Options           | Default  | Description |
-| ------------- |-------------| -----| -------- |
-| thousandSeparator | mixed: single character string or boolean true (true is default to ,) |','| Add thousand separators on number |
-| thousandSpacing | String, One of ['2', '2s', '3', '4'] | '2s' | Add thousand group spacing on number. Default: '2' will format like 1,23,45,67,89 __ '3' will format like 1,234,567,981 __ '2s' will format like 1,23,45,67,981 __ '4' will format like 1,2345,6789 |
-| decimalSeparator | single character string| . | Support decimal point on a number |
-| symbolText | String |   | Given text shown instead of currency symbol
-| symbolStyle | Object |   | styles symbol with given styles e.g {color: 'green'} its turn symbol into green color
-| symbol | String |   | Symbol is shown before amount
-| decimalPoints | Number | none| If defined it limits to given decimal scale |
-| hideNegativeSign      | boolean     |   false | hides minus sign of nagative amount |
-| format | %v %s | %s %v  | %s stands for symbol and %v stand for value
-| valueDivider | Number | 1 | Divide's actual amount by given value
+or
 
-#### Syntax:
-```js
-DwCurrency.setConfig({
-    $currency: $currencyConfig
-});
-
-DwCurrency.setDefaultCurrency('CurrencyISOCode');
+```bash
+npm install react-currency-format
 ```
 
-#### Example:
+### Usage
+
 ```js
-import { DwCurrency } from './dw-currency';
-
-// Need to specify the only currencies which needs to be overridden. So, currency not provided here will be working with it’s default value.
-
-DwCurrency.setConfig({
-    "INR": {
-       "valueDivider": 100,
-       "symbol": "₹"
-    },
-    "USD": {
-       "valueDivider": 50,
-       "symbolText": 'USD'
-       "format": "%v %s"
-       "symbolStyle": {color: 'green', fontSize: '18px'}
-    },
-});
-
-// Sets default currency in whole application
-DwCurrency.setDefaultCurrency('INR');
-
-//
-DwCurrency.formatCurrency({
-    value: this.value,
-    currency: this.currency,
-    noDecimals: this.noDecimals,
-    noSymbol: this.noSymbol,
-    allowNegative: this.allowNegative
-})
-
+import '@dreamworld/dw-currency-format';
 ```
-#### Usage
-- Set currencyConfig once, ideally from app-shell:
-- Use dw-currency-format whenever needed.
 
-
-# Dw currency format
-- Provides formated view of currency
-
+```html
+<dw-currency-format value=${1500} currency=${USD}></dw-currency-format>
+```
 
 #### Properties
 
-| Props        | Type  | Description |
+| Property        | Type  | Description |
 | ------------- | -----| -------- |
-| value | Number | Amount  which is shown in view
-| currency | String | Iso code of currency
-| noSymbol | Boolean | True to hide currency symbol
-| noDecimals | Boolean | True to hide all decimal points of given value
-| hideNegativeSign | Boolean | True to hide minus sign of given value (If value is negative)
+| value | Number | Currency Value which is to be formatted. |
+| currency | String | Iso code of currency |
+| symbolFormat | String (enum) | Position of the symbol. Possible values: `none`, `prefix` and `postfix`. Default: `prefix`. |
+| decimalPoints | Number | Number of the decimal points to be shown. Default value is used from the global configuration. But, sometimes, we may need to override it at the time of usage. e.g. Set it to `0` to show no decimal at all. |
+| noNegative | Boolean | When `true` doesn't shown negative sign |
 
-#### Usage pattern
-```html
-<dw-currency-format value=${1500} currency=${USD}></dw-currency-format>
+## Global Configuration
+With the library we have shipped few currencies configuration, see `currency-config.js`. That should be sufficient for most of the use-case.
+
+
+### Change global configuration
+Sample configuration for a (single) currency is as follows:
+```js
+{
+  symbol: "₹",
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  thousandSpacing: '2s',
+  decimalPoints: 2,
+  valueDivider: 1
+}
+```
+
+We can change a configuration for any existing currency, or add a new currency to the config as follows.
+
+```js
+import { DwCurrency } '@dreamworld/dw-currency';
+DwCurrency.setConfig({
+    USD: {
+        symbol: '$',
+        thousandSpacing: '3'
+    },
+    MYCURRENCY: {
+        symbol: "MC",
+        valueDivider: 100
+    }
+});
+```
+
+#### Currency Config
+| Configuration name        | Type           | Description |
+| ------------- |-------------| ----- |
+| symbol | String | Currency Symbol |
+| thousandSeparator | String | Character to be used as thousand separator. Default value: `,` (comma) |
+| decimalSeparator | String|  Character to be used as decimal separator. Default value: `.` (dot) |
+| thousandSpacing | String (enum) | How many numbers are grouped for thousand separator. Possible values are `2`, `2s`, `3`, `4`. Default value: `3`.  Whne `2` will format like 1,23,45,67,89. When `3` will format like 1,234,567,981. When `2s` will format like 1,23,45,67,981. When  `4` will format like 1,2345,6789. |
+| symbolStyle | Object |   | CSS Styles to be applied to symbol. e.g `{color: 'green'}`. It turns symbol into green color. This is mostly used to set custom/required font for the symbol. |
+| decimalPoints | Number | Precision. Number of digits after decimal points. Default value: `2`. |
+| valueDivider | Number | 1 | Actual value of the currency = value/valueDivider. Default value: `1`. E.g. In Hisab currency value is non-floating point (integer, actually long) number. It's possible becuase, currency value is considered in Paisa/Cent. So, It's actual value is found by dividing it with `100`. In such case you need to set `valueDivider` to 100. |
+
+#### Change Defaults
+Default config for all the currencies are as follows. It's defined in `currency-config.js`.
+
+```js
+{
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  thousandSpacing: '3',
+  decimalPoints: 2,
+  valueDivider: 1
+}
+```
+
+And this defaults can be overriden for your application (at global level), using following:
+
+
+```js
+import { DwCurrency } '@dreamworld/dw-currency';
+DwCurrency.setDefaults({
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  thousandSpacing: '3',
+  decimalPoints: 2,
+  valueDivider: 100
+});
 ```
