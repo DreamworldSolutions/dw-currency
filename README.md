@@ -12,7 +12,7 @@ yarn add @dreamworld/dw-currency
 or
 
 ```bash
-npm install react-currency-format
+npm install @dreamworld/dw-currency
 ```
 
 ### Usage
