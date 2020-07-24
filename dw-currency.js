@@ -118,6 +118,14 @@ export class DwCurrency {
   static _limitToScale(numStr, scale) {
     let n = numStr ? Math.round(Number(numStr.substr(0, scale) + '.' + numStr.substr(scale))) : 0;
     let str = n.toString();
+    
+    let diff = numStr.substr(0, scale).length - str.length;
+
+    if(diff){
+      for (let i = 0; i < diff; i++) {
+        str = "0" + str;
+      }
+    }
 
     // Do 0 paddings
     while (str.length < scale) {
