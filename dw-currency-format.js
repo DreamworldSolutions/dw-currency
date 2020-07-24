@@ -54,7 +54,7 @@ export class DwCurrencyFormat extends LitElement {
   }
 
   render() {
-    if (!this.value) {
+    if (!this.value && this.value !== 0) {
       return;
     }
 

@@ -83,7 +83,10 @@ export class DwCurrencyDemo extends LitElement {
       <dw-currency-format value="-110032" currency="INR" noNegative="none"></dw-currency-format> (for INR)<br>
 
       <h1>Custom Currency</h1>
-      <dw-currency-format value="110032" currency="MYC"></dw-currency-format><br>
+      <dw-currency-format value="11040006" currency="MYC" decimalPoints="2"></dw-currency-format><br>
+
+      <h1>Zero Value</h1>
+      <dw-currency-format value="0" currency="INR"></dw-currency-format><br>
     </div>`
   }
 }
