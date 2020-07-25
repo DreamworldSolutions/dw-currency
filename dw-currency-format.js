@@ -1,4 +1,5 @@
-import { css, LitElement, html } from 'lit-element';
+import { css, html } from 'lit-element';
+import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
 import { DwCurrency } from './dw-currency';
 import { styleMap } from 'lit-html/directives/style-map';
 
