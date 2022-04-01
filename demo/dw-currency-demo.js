@@ -38,14 +38,29 @@ export class DwCurrencyDemo extends LitElement {
       `
     ];
   }
+  
+  static get properties() {
+    return {
+      _currency: String
+    }
+  }
+
+  constructor(){
+    super();
+    this._currency = "INR";
+  }
 
   render() {
+    DwCurrency.setDefaultsCurrrency(this._currency);
     return html`<div>
 
       <h1>Default</h1>
       <div>Currency symbol is shown as prefix, and Decimal points are shown as per the global config for the currency.</div>
       <br>
       <br>
+      <div>${DwCurrency.formatWithSymbol({value: 25454, position: 'postfix'})}</div>
+      <div>${DwCurrency.formatWithSymbol(5012, "USD")}</div>
+      <div>${DwCurrency.formatWithSymbol(5012, "EUR", "postfix")}</div>
       <dw-currency-format value="-110032" currency="USD"></dw-currency-format><br>
       <dw-currency-format value="112869866" currency="INR"></dw-currency-format><br>
       <dw-currency-format value="11040" currency="GBP"></dw-currency-format><br>
