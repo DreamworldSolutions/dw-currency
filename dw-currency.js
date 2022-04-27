@@ -95,20 +95,20 @@ export class DwCurrency {
    * @returns 
    */
   static formatWithSymbol(value, currency, position) {
-    if(typeof value === 'object'){
+    if (typeof value === "object") {
       let args = value;
       value = args.value;
       currency = args.currency;
       position = args.position;
     }
 
-    let {symbol} = DwCurrency.getCurrencyConfig(currency);
+    let { symbol } = DwCurrency.getCurrencyConfig(currency);
     value = this.format(value);
 
-    if(position === "postfix"){
+    if (position === "postfix") {
       return value + " " + symbol;
     }
-    return symbol+ " "+ value;
+    return symbol + " " + value;
   }
 
   /**
