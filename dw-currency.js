@@ -22,7 +22,7 @@ export class DwCurrency {
     this._defaultConfig = defaultConfig;
   }
 
-  static setDefaultsCurrrency(currency) {
+  static setDefaultCurrency(currency) {
     this._defaultConfig = this.getCurrencyConfig(currency);
   }
 
