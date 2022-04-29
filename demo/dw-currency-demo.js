@@ -51,7 +51,7 @@ export class DwCurrencyDemo extends LitElement {
   }
 
   render() {
-    DwCurrency.setDefaultsCurrrency(this._currency);
+    DwCurrency.setDefaultCurrency(this._currency);
     return html`<div>
 
       <h1>Default</h1>
