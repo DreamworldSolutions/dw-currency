@@ -179,4 +179,4 @@ export class DwCurrency {
 };
 
 DwCurrency._config = currencyConfig;
-DwCurrency._defaultConfig = defaultCurrencyConfig;
+DwCurrency._defaultConfig = defaultCurrencyConfig; 
