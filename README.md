@@ -19,11 +19,29 @@ npm install @dreamworld/dw-currency
 
 ```js
 import '@dreamworld/dw-currency-format';
+import { DwCurrency } from '@dreamworld/dw-currency';
 ```
 
 ```html
 <dw-currency-format value=${1500} currency=${USD}></dw-currency-format>
 ```
+#### DwCurrency Methods
+| Method | Arguments | Returns |
+| ------ | --------- | ------- |
+| format | value (Number) or Object (e.g. {value: Number, currency: String, decimalPoints: Number, noNegative: Boolean})| (String): Returns amount in string |
+| formatWithSymbol | value (Number) or Object (e.g. {value: Number, currency: String, position: String}) | (String): Returns amount in string with currency symbol |
+
+#### Usage
+```js
+DwCurrency.format(150023)
+//return 1500.23
+DwCurrency.formatWithSymbol(150023)
+//return ₹ 1500.23
+DwCurrency.formatWithSymbol({value: 150023, symbol: "EUR"})
+//return € 1500.23
+DwCurrency.formatWithSymbol({value: 150023, symbol: "EUR", position: "postfix"})
+//return 1500.23 €
+``` 
 
 #### Properties
 
@@ -104,4 +122,8 @@ DwCurrency.setDefaults({
   decimalPoints: 2,
   valueDivider: 100
 });
+```
+#### setDefaultCurrency
+```js
+DwCurrency.setDefaultsCurrrency("INR");
 ```

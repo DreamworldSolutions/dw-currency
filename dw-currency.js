@@ -22,6 +22,10 @@ export class DwCurrency {
     this._defaultConfig = defaultConfig;
   }
 
+  static setDefaultCurrency(currency) {
+    this._defaultConfig = this.getCurrencyConfig(currency);
+  }
+
   /**
    * Returns configuration of the requested currency.
    */
@@ -80,6 +84,31 @@ export class DwCurrency {
     // Saparate amount with decimal separator config
     // If noDecimals config is true then decimal points is not appended
     return `${beforeDecimal}${!afterDecimal ? '' : decimalSeparator + afterDecimal}`;
+  }
+
+  /**
+   * Formats given currency value as string includes currency symbol.
+   * @param {Number | Object} value - Currency amount. If the first argument is the Object, then 
+   *    other input params are ignored and considered that input is specified as the Object.
+   * @param {String} currency - ISO code of the currency
+   * @param {String} position - Position of the symbol - posible values:  `prefix`, and `postfix`. default `prefix`.
+   * @returns 
+   */
+  static formatWithSymbol(value, currency, position) {
+    if (typeof value === "object") {
+      let args = value;
+      value = args.value;
+      currency = args.currency;
+      position = args.position;
+    }
+
+    let { symbol } = DwCurrency.getCurrencyConfig(currency);
+    value = this.format(value);
+
+    if (position === "postfix") {
+      return value + " " + symbol;
+    }
+    return symbol + " " + value;
   }
 
   /**
