@@ -126,4 +126,4 @@ DwCurrency.setDefaults({
 #### setDefaultCurrency
 ```js
 DwCurrency.setDefaultsCurrrency("INR");
-```
+``` 
