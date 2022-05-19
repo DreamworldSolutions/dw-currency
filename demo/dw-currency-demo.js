@@ -81,6 +81,7 @@ export class DwCurrencyDemo extends LitElement {
       <h1> Without currency symbol</h1>
       <dw-currency-format value="-110032" currency="USD" symbolPosition="none"></dw-currency-format> (for USD)<br>
       <dw-currency-format value="-110032" currency="INR" symbolPosition="none"></dw-currency-format> (for INR)<br>
+      <dw-currency-format value="0" currency="INR" symbolPosition="none"></dw-currency-format> (for INR)<br>
 
 
       <h1>Decimal Points customization</h1>
