@@ -1,8 +1,6 @@
-import { css, html } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
+import { LitElement, html, css } from '@dreamworld/pwa-helpers/lit.js';
 import { DwCurrency } from './dw-currency';
-import { styleMap } from 'lit-html/directives/style-map';
-
+import { styleMap } from 'lit/directives/style-map.js';
 export class DwCurrencyFormat extends LitElement {
   static get styles() {
     return [
@@ -82,7 +80,7 @@ export class DwCurrencyFormat extends LitElement {
    */
   _getSymbol() {
     let { symbol, symbolStyle } = DwCurrency.getCurrencyConfig(this.currency);
-    return html`<span style=${styleMap(symbolStyle)}>${symbol}</span>`;
+    return html`<span style=${styleMap(symbolStyle || {})}>${symbol}</span>`;
   }
 }
 
