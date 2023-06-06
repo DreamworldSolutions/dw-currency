@@ -28,7 +28,7 @@ import { DwCurrency } from '@dreamworld/dw-currency';
 #### DwCurrency Methods
 | Method | Arguments | Returns |
 | ------ | --------- | ------- |
-| format | value (Number) or Object (e.g. {value: Number, currency: String, decimalPoints: Number, noNegative: Boolean})| (String): Returns amount in string |
+| format | value (Number) or Object (e.g. {value: Number, currency: String, decimalPoints: Number, noNegative: Boolean, noExtraDecimalZero: Boolean})| (String): Returns amount in string |
 | formatWithSymbol | value (Number) or Object (e.g. {value: Number, currency: String, position: String}) | (String): Returns amount in string with currency symbol |
 
 #### Usage
@@ -52,6 +52,7 @@ DwCurrency.formatWithSymbol({value: 150023, symbol: "EUR", position: "postfix"})
 | symbolFormat | String (enum) | Position of the symbol. Possible values: `none`, `prefix` and `postfix`. Default: `prefix`. |
 | decimalPoints | Number | Number of the decimal points to be shown. Default value is used from the global configuration. But, sometimes, we may need to override it at the time of usage. e.g. Set it to `0` to show no decimal at all. |
 | noNegative | Boolean | When `true` doesn't shown negative sign |
+| noExtraDecimalZero | Boolean | When `true` doesn't shown extra decimal zero |
 
 ## Global Configuration
 With the library we have shipped few currencies configuration, see `currency-config.js`. That should be sufficient for most of the use-case.
