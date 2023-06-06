@@ -43,7 +43,7 @@ export class DwCurrency {
    * @param {Boolean} noExtraDecimalZero - true to hide extra decimal zero.
    * @return {String} returns string with applied config
    */
-  static format(value, currency, decimalPoints, noNegative) {
+  static format(value, currency, decimalPoints, noNegative, noExtraDecimalZero) {
     if (typeof value === "object") {
       let args = value;
       value = args.value;
@@ -112,7 +112,7 @@ export class DwCurrency {
    * limit decimal numbers to given scale. It also manages rounding and '0' padding.
    * We didn't use .fixedTo because that will break with big numbers
    */
-  static _limitToScale(numStr, scale) {
+  static _limitToScale(numStr, scale, noExtraDecimalZero) {
     let n = numStr ? Math.round(Number(numStr.substr(0, scale) + "." + numStr.substr(scale))) : 0;
     let str = n.toString();
 
@@ -124,11 +124,12 @@ export class DwCurrency {
       }
     }
 
+    if (noExtraDecimalZero) {
+      return str;
+    }
+
     // Do 0 paddings
     while (str.length < scale) {
-      if (noExtraDecimalZero) {
-        return str;
-      }
       str += "0";
     }
     return str;
