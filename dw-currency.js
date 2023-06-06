@@ -40,6 +40,7 @@ export class DwCurrency {
    * @param {String} currency - Iso code of currency
    * @param {Number} decimalPoints - Number of decimal points expected in the formatted string.
    * @param {Boolean} noNegative - true to hide sign of negative amount
+   * @param {Boolean} noExtraDecimalZero - true to hide extra decimal zero.
    * @return {String} returns string with applied config
    */
   static format(value, currency, decimalPoints, noNegative) {
@@ -49,6 +50,7 @@ export class DwCurrency {
       currency = args.currency;
       decimalPoints = args.decimalPoints;
       noNegative = args.noNegative;
+      noExtraDecimalZero = args.noExtraDecimalZero;
     }
 
     let curConfig = this.getCurrencyConfig(currency);
@@ -66,7 +68,7 @@ export class DwCurrency {
     let { beforeDecimal, afterDecimal, addNegativeSign } = this._splitDecimal(value, noNegative);
 
     // Decimal points
-    afterDecimal = decimalPoints ? this._limitToScale(afterDecimal, decimalPoints) : "";
+    afterDecimal = decimalPoints ? this._limitToScale(afterDecimal, decimalPoints, noExtraDecimalZero) : "";
 
     //Thousand separator saparate string and appended with thousandSeparator
     if (thousandSeparator) {
@@ -124,6 +126,9 @@ export class DwCurrency {
 
     // Do 0 paddings
     while (str.length < scale) {
+      if (noExtraDecimalZero) {
+        return str;
+      }
       str += "0";
     }
     return str;

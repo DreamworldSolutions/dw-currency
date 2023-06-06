@@ -42,8 +42,13 @@ export class DwCurrencyFormat extends LitElement {
        * Input property
        * Set to `true` to not show negative sign when value is negative.
        */
-      noNegative: { type: Boolean }
+      noNegative: { type: Boolean },
 
+      /**
+       * Input property
+       * Set to `true` to not show Extra Decimal Zero.
+       */
+      noExtraDecimalZero: { type: Boolean }
     }
   }
 
@@ -71,7 +76,8 @@ export class DwCurrencyFormat extends LitElement {
       value: this.value,
       currency: this.currency,
       decimalPoints: this.decimalPoints,
-      noNegative: this.noNegative
+      noNegative: this.noNegative,
+      noExtraDecimalZero: this.noExtraDecimalZero
     })}</span>`;
   }
 
