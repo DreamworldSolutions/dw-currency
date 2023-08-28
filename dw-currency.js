@@ -61,6 +61,9 @@ export class DwCurrency {
       decimalPoints = curConfig.decimalPoints;
     }
 
+    // When value is 2.9103830456733704e-11, which should look like 0.00 as money, the "toFixed" method rounds the string to a specified number of decimals.
+    value = Number(value).toFixed();
+
     // Value is divided with config value otherwise its divided with 1
     value = (value / (valueDivider || 1)).toString();
 
