@@ -43,7 +43,7 @@ export class DwCurrency {
    * @param {Boolean} noExtraDecimalZero - true to hide extra decimal zero.
    * @return {String} returns string with applied config
    */
-  static format(value, currency, decimalPoints, noNegative, noExtraDecimalZero) {
+  static format(value, currency, decimalPoints, noNegative, noExtraDecimalZero, thousandSeparator, thousandSpacing) {
     if (typeof value === "object") {
       let args = value;
       value = args.value;
@@ -51,14 +51,24 @@ export class DwCurrency {
       decimalPoints = args.decimalPoints;
       noNegative = args.noNegative;
       noExtraDecimalZero = args.noExtraDecimalZero;
+      thousandSeparator = args.thousandSeparator;
+      thousandSpacing = args.thousandSpacing;
     }
 
     let curConfig = this.getCurrencyConfig(currency);
     //Getting config from currency object
-    let { thousandSeparator, decimalSeparator, thousandSpacing, valueDivider } = curConfig;
+    let { decimalSeparator, valueDivider } = curConfig;
 
     if (decimalPoints === undefined) {
       decimalPoints = curConfig.decimalPoints;
+    }
+
+    if (thousandSeparator === undefined) {
+      thousandSeparator = curConfig.thousandSeparator;
+    }
+
+    if (thousandSpacing === undefined) {
+      thousandSpacing = curConfig.thousandSpacing;
     }
 
     // When the value is very small, or we can say nearly '0', like '2.9103830456733704e-11' it shows as it is, so to fix this, we used the "toFixed" method to round off the number and remove all decimals. 
