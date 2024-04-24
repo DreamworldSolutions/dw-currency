@@ -79,7 +79,7 @@ export class DwCurrency {
     value = (value / (valueDivider || 1)).toString();
 
     // Splitting string in two parts beforeDecimal and afterDecimal
-    let { beforeDecimal, afterDecimal, addNegativeSign } = this._splitDecimal(value, noNegative);
+    let { beforeDecimal, afterDecimal, addNegativeSign } = this._splitDecimal(value, noNegative, decimalPoints);
 
     // Decimal points
     afterDecimal = decimalPoints ? this._limitToScale(afterDecimal, decimalPoints, noExtraDecimalZero) : "";
@@ -184,11 +184,12 @@ export class DwCurrency {
    *  @param {Boolean} addNegativeSign- true if amount is negative
    *
    */
-  static _splitDecimal(numberStr, noNegative) {
+  static _splitDecimal(numberStr, noNegative, decimalPoints) {
     //Checks string has minus sign
     const hasNegative = numberStr[0] === "-";
     const addNegativeSign = hasNegative && !noNegative;
     numberStr = numberStr.replace("-", "");
+    numberStr = Number(numberStr).toFixed(decimalPoints);
     const parts = numberStr.split(".");
     const beforeDecimal = parts[0];
     const afterDecimal = parts[1] || "";
