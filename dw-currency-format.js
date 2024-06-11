@@ -8,7 +8,12 @@ export class DwCurrencyFormat extends LitElement {
         :host {
           display: inline;
         }
-      `
+
+        .decimal {
+          opacity: 0.7;
+          font-size: var(--decimal-font-size, inherit);
+        }
+      `,
     ];
   }
 
@@ -54,7 +59,12 @@ export class DwCurrencyFormat extends LitElement {
 
   constructor() {
     super();
-    this.symbolPosition = 'prefix';
+    this.symbolPosition = "prefix";
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._setDecimalFontSize();
   }
 
   render() {
@@ -62,23 +72,34 @@ export class DwCurrencyFormat extends LitElement {
       return;
     }
 
-    if (this.symbolPosition === 'none') {
-      return this._getValue();
-    } else if (this.symbolPosition === 'prefix') {
-      return html`${this._getSymbol()}&nbsp;${this._getValue()}`
-    } else {
-      return html`${this._getValue()}&nbsp;${this._getSymbol()}`;
-    }
+    return html`${this._getValue()}`;
   }
 
   _getValue() {
-    return html`<span class="value">${DwCurrency.format({
+    const formattedValue = DwCurrency.format({
       value: this.value,
       currency: this.currency,
       decimalPoints: this.decimalPoints,
       noNegative: this.noNegative,
-      noExtraDecimalZero: this.noExtraDecimalZero
-    })}</span>`;
+      noExtraDecimalZero: this.noExtraDecimalZero,
+    });
+
+    const [integerPart, decimalPart] = formattedValue.split(".");
+
+    const integegerTemplate = html`<span class="integer"
+      >${integerPart}${decimalPart ? "." : ""}</span
+    >`;
+    const decimalTemplate = html`${
+      decimalPart ? html`<span class="decimal">${decimalPart}</span>` : ""
+    }</span>`;
+
+    if (this.symbolPosition === "none") {
+      return html`${integegerTemplate}${decimalTemplate}`;
+    } else if (this.symbolPosition === "prefix") {
+      return html`${this._getSymbol()}&nbsp;${integegerTemplate}${decimalTemplate}`;
+    } else {
+      return html`${integegerTemplate}${decimalTemplate}&nbsp;${this._getSymbol()}`;
+    }
   }
 
   /**
@@ -87,6 +108,13 @@ export class DwCurrencyFormat extends LitElement {
   _getSymbol() {
     let { symbol, symbolStyle } = DwCurrency.getCurrencyConfig(this.currency);
     return html`<span style=${styleMap(symbolStyle || {})}>${symbol}</span>`;
+  }
+
+  _setDecimalFontSize() {
+    let fontSize = getComputedStyle(this).getPropertyValue("font-size");
+    fontSize = parseFloat(fontSize);
+    const decimalFontSize = fontSize * 0.75;
+    this.style.setProperty("--decimal-font-size", `${decimalFontSize}px`);
   }
 }
 
