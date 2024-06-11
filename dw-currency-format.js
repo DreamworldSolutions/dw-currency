@@ -86,7 +86,7 @@ export class DwCurrencyFormat extends LitElement {
 
     const [integerPart, decimalPart] = formattedValue.split(".");
 
-    const integegerTemplate = html`<span class="integer"
+    const integerTemplate = html`<span class="integer"
       >${integerPart}${decimalPart ? "." : ""}</span
     >`;
     const decimalTemplate = html`${
@@ -94,11 +94,11 @@ export class DwCurrencyFormat extends LitElement {
     }</span>`;
 
     if (this.symbolPosition === "none") {
-      return html`${integegerTemplate}${decimalTemplate}`;
+      return html`${integerTemplate}${decimalTemplate}`;
     } else if (this.symbolPosition === "prefix") {
-      return html`${this._getSymbol()}&nbsp;${integegerTemplate}${decimalTemplate}`;
+      return html`${this._getSymbol()}&nbsp;${integerTemplate}${decimalTemplate}`;
     } else {
-      return html`${integegerTemplate}${decimalTemplate}&nbsp;${this._getSymbol()}`;
+      return html`${integerTemplate}${decimalTemplate}&nbsp;${this._getSymbol()}`;
     }
   }
 
