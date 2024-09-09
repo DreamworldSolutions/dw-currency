@@ -11,7 +11,7 @@ export class DwCurrencyFormat extends LitElement {
 
         .decimal {
           opacity: 0.7;
-          font-size: var(--decimal-font-size, inherit);
+          font-size: 75%;
         }
       `,
     ];
@@ -62,11 +62,6 @@ export class DwCurrencyFormat extends LitElement {
     this.symbolPosition = "prefix";
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._setDecimalFontSize();
-  }
-
   render() {
     if (this.value === undefined || this.value === null) {
       return;
@@ -108,13 +103,6 @@ export class DwCurrencyFormat extends LitElement {
   _getSymbol() {
     let { symbol, symbolStyle } = DwCurrency.getCurrencyConfig(this.currency);
     return html`<span style=${styleMap(symbolStyle || {})}>${symbol}</span>`;
-  }
-
-  _setDecimalFontSize() {
-    let fontSize = getComputedStyle(this).getPropertyValue("font-size");
-    fontSize = parseFloat(fontSize);
-    const decimalFontSize = fontSize * 0.75;
-    this.style.setProperty("--decimal-font-size", `${decimalFontSize}px`);
   }
 }
 
