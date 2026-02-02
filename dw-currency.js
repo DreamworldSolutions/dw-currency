@@ -105,16 +105,21 @@ export class DwCurrency {
    * @param {String} position - Position of the symbol - posible values:  `prefix`, and `postfix`. default `prefix`.
    * @returns
    */
-  static formatWithSymbol(value, currency, position) {
+  static formatWithSymbol(value, currency, position, decimalPoints, noNegative, noExtraDecimalZero, thousandSeparator, thousandSpacing) {
     if (typeof value === "object") {
       let args = value;
       value = args.value;
       currency = args.currency;
       position = args.position;
+      decimalPoints = args.decimalPoints;
+      noNegative = args.noNegative;
+      noExtraDecimalZero = args.noExtraDecimalZero;
+      thousandSeparator = args.thousandSeparator;
+      thousandSpacing = args.thousandSpacing;
     }
 
     let { symbol } = DwCurrency.getCurrencyConfig(currency);
-    value = this.format(value);
+    value = this.format(value, currency, decimalPoints, noNegative, noExtraDecimalZero, thousandSeparator, thousandSpacing);
 
     if (position === "postfix") {
       return value + " " + symbol;
