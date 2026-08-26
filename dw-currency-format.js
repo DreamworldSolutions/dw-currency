@@ -11,7 +11,7 @@ export class DwCurrencyFormat extends LitElement {
 
         .decimal {
           opacity: 0.7;
-          font-size: 75%;
+          font-size: 85%;
         }
       `,
     ];
